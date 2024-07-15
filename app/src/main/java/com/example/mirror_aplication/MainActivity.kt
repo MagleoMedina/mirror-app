@@ -233,6 +233,7 @@ class MainActivity : ComponentActivity() {
 
     }
 
+
     // Funciones para detener el servicio de captura de pantalla
     private fun stopScreenCaptureService() :Boolean {
         if (!isClientOrServerActive()) {
@@ -266,7 +267,6 @@ class MainActivity : ComponentActivity() {
     }
 
     // Verifica si la aplicación tiene permiso para acceder a las estadísticas de uso
-    //Se itera cada 60 segundos para ver si hay eventos
     private fun checkUsageStatsPermission(): Boolean {
         val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val endTime = System.currentTimeMillis()//Tiempo actual en milisegundos
@@ -276,8 +276,7 @@ class MainActivity : ComponentActivity() {
         return usageEvents.hasNextEvent()//Verifica si hay eventos
     }
 
-    // Verifica si la aplicación tiene permiso para superponer sobre otras aplicaciones o
-    //Para poner ventanas flotantes
+    // Verifica si la aplicación tiene permiso para superponer sobre otras aplicaciones
     private fun checkOverlayPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// Verifica la versión de Android
             Settings.canDrawOverlays(this)//Verifica si la aplicación tiene permiso para superponer
@@ -367,19 +366,19 @@ class MainActivity : ComponentActivity() {
             bitmap.copyPixelsFromBuffer(buffer)//Copia los datos del buffer al bitmap
             image.close()//Cierra la imagen
 
-
+            // Add bitmap to the queue for processing
             try {
-                sendImage(bitmap)           //envia la imagen del servidor
-                // imageQueue.put(bitmap)   //con delay
+                sendImage(bitmap)//envia la imagen del servidor
+                // imageQueue.put(bitmap)//con delay
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-        }, Handler(Looper.getMainLooper())) //Ejecuta el VirtualDisplay en un hilo
+        }, Handler(Looper.getMainLooper()))//Ejecuta el VirtualDisplay en un hilo
     }
 
     // Envia la imagen al servidor
     private fun sendImage(bitmap: Bitmap) {
-        if (isServiceStopped) return//Verifica si el servicio ha sido detenido
+        if (isServiceStopped) return
         val clientIp = ipInput.text.toString()
         executorService.execute {//Ejecuta la tarea en un hilo
             try {
@@ -568,7 +567,7 @@ class MainActivity : ComponentActivity() {
         return "IP no disponible"
     }
 
-    // Detecta las aplicaciones en primer plano.
+    // Detecta las aplicaciones en primer plano
     @SuppressLint("WrongConstant")
     private fun detectForegroundApp() {
         val usageStatsManager =
