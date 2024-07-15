@@ -568,7 +568,7 @@ class MainActivity : ComponentActivity() {
         return "IP no disponible"
     }
 
-    // Detecta las aplicaciones en primer plano
+    // Detecta las aplicaciones en primer plano.
     @SuppressLint("WrongConstant")
     private fun detectForegroundApp() {
         val usageStatsManager =
